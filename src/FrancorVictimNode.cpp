@@ -54,8 +54,12 @@ void FrancorVictimNode::loop_callback(const ros::TimerEvent& e)
   void FrancorVictimNode::sub_map_callback(const nav_msgs::OccupancyGrid& msg)
   {
     _map = std::make_shared<rona::map::GridMap>(msg);
-    this->draw_victims();
-    _pubMap.publish(_map->getGrid()->toRosOccGrid());
+    _map_small = std::make_shared<rona::map::GridMap>(msg);
+    _map_small->resize(6);
+    //_map->resize(6);
+    this->draw_victims(_map_small);
+    this->draw_victims(_map);
+    _pubMap.publish(_map_small->getGrid()->toRosOccGrid());
   }
   void FrancorVictimNode::sub_sh_pos_callback(const francor_msgs::SensorHeadCmd& msg)
   {
@@ -90,8 +94,9 @@ void FrancorVictimNode::loop_callback(const ros::TimerEvent& e)
 
 
     //pub map
-    this->draw_victims();
-    _pubMap.publish(_map->getGrid()->toRosOccGrid());
+    this->draw_victims(_map_small);
+    this->draw_victims(_map);
+    _pubMap.publish(_map_small->getGrid()->toRosOccGrid());
 
     ROS_INFO("Save Victim Map");
     //save as png

@@ -46,13 +46,14 @@ private: //functions
   void sub_sh_pos_callback(const francor_msgs::SensorHeadCmd& msg);
   void sub_add_victim_callback(const std_msgs::Bool& msg);
 
-  void draw_victims()
+  void draw_victims(std::shared_ptr<rona::map::GridMap> map)
   {
     for(auto& e : _victims)
     {
-      rona::map::Operations::drawFilledCircle(*(_map->getGrid()), e, 0.2, 150);
+      rona::map::Operations::drawFilledCircle(*(map->getGrid()), e, 0.2, 150);
     }
   }
+
 
   //void dynreconfig_callback(FrancorVictimNode::FrancorVictimNodeConfig &config, uint32_t level);
 private: //dataelements
@@ -68,6 +69,8 @@ private: //dataelements
 
   double _pan_angle;
   double _dist;
+
+  std::shared_ptr<rona::map::GridMap> _map_small;
   std::shared_ptr<rona::map::GridMap> _map;
 
   ros::Timer _loopTimer;
